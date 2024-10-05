@@ -23,19 +23,17 @@ const AppNavigator = () => {
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
-          // Escolhendo ícones com base na rota
           if (route.name === 'Home') {
-            iconName = 'home';  // Ícone de casa
+            iconName = 'home';
           } else if (route.name === 'Agendamentos') {
-            iconName = 'calendar';  // Ícone de calendário
+            iconName = 'calendar'; 
           } else if (route.name === 'Perfil') {
-            iconName = 'user';  // Ícone de pessoa
+            iconName = 'user';
           }
 
-          // Retorna o ícone correto com as cores e tamanhos
           return <AntDesign name={iconName as any} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#ff3300', // Vermelho padrão da barbearia
+        tabBarActiveTintColor: '#ff3300',
         tabBarInactiveTintColor: 'gray',
         headerShown: false,
       })}

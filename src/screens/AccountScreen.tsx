@@ -1,4 +1,3 @@
-// screens/PerfilScreen.tsx
 import React from 'react';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
@@ -8,7 +7,6 @@ export const AccountScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Foto de Perfil */}
       <View style={styles.profileContainer}>
         <Image 
           source={{ uri: 'https://via.placeholder.com/150' }} 
@@ -18,14 +16,12 @@ export const AccountScreen = () => {
         <Text style={styles.profileEmail}>barbeiro@exemplo.com</Text>
       </View>
 
-      {/* Informações Adicionais */}
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>Telefone: (11) 99999-9999</Text>
         <Text style={styles.infoText}>Endereço: Rua Exemplo, 123, São Paulo</Text>
         <Text style={styles.infoText}>Experiência: 5 anos</Text>
       </View>
 
-      {/* Botão de Logout */}
       <TouchableOpacity style={styles.logoutButton} onPress={logout}>
         <Text style={styles.logoutButtonText}>Sair</Text>
       </TouchableOpacity>
@@ -50,12 +46,12 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     marginBottom: 16,
     borderWidth: 3,
-    borderColor: '#003366', // Azul da barbearia
+    borderColor: '#003366',
   },
   profileName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#003366', // Azul da barbearia
+    color: '#003366',
   },
   profileEmail: {
     fontSize: 16,
@@ -71,7 +67,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   logoutButton: {
-    backgroundColor: '#ff3300', // Vermelho da barbearia
+    backgroundColor: '#ff3300',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,

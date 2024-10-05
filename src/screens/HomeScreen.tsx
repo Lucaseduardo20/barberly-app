@@ -1,4 +1,3 @@
-// screens/HomeScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 
@@ -43,7 +42,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#003366', // Azul da barbearia
+    color: '#003366',
     marginBottom: 16,
   },
   subtitle: {
@@ -67,7 +66,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     padding: 16,
     borderRadius: 8,
-    backgroundColor: '#003366', // Azul da barbearia
+    backgroundColor: '#003366',
   },
   summaryText: {
     fontSize: 16,

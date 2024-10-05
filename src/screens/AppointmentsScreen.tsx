@@ -1,8 +1,6 @@
-// screens/AgendamentosScreen.tsx
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
-// Mock com mais detalhes de cada agendamento
 const mockAgendamentos = [
   { 
     id: '1', 
@@ -32,17 +30,14 @@ const mockAgendamentos = [
 
 export const AppointmentsScreen = () => {
   const handleCancelar = (id: string) => {
-    // Lógica para cancelar o agendamento
     console.log(`Cancelando agendamento com id: ${id}`);
   };
 
   const handleConcluir = (id: string) => {
-    // Lógica para concluir o agendamento
     console.log(`Concluindo agendamento com id: ${id}`);
   };
 
   const handleDetalhes = (id: string) => {
-    // Lógica para ver mais detalhes
     console.log(`Ver detalhes do agendamento com id: ${id}`);
   };
 
