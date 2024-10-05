@@ -1,4 +1,3 @@
-// screens/LoginScreen.tsx
 import React, { useState } from 'react';
 import { 
   View, 
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 50,
-    backgroundColor: '#4CAF50',  // Usar cor primária da plataforma
+    backgroundColor: '#4CAF50',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
