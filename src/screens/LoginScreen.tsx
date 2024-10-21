@@ -16,7 +16,7 @@ export const LoginScreen = ({ navigation }: any) => {
   const { login, isAuthenticated } = useAuth();
 
   const handleLogin = async () => {
-    await login(email, password);
+    await login({email: email, password: password});
     if (isAuthenticated) {
       navigation.navigate('Agendamentos');
     }

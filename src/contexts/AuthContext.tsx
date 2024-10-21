@@ -1,8 +1,12 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { loginService } from '../services/auth';
+import { loginData } from '../types/auth';
+import { AxiosResponse } from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthContextData {
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (data: loginData) => Promise<void>;
   logout: () => void;
 }
 
@@ -11,14 +15,20 @@ const AuthContext = createContext<AuthContextData | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const login = async (email: string, password: string) => {
-    setIsAuthenticated(true);
-    if (email === 'barbeiro@exemplo.com' && password === 'senha123') {
-    }
+  const login = async (data: loginData) => {
+      const response: AxiosResponse = await loginService(data).then(() => {
+        AsyncStorage.setItem('token', response.data.token);
+        setIsAuthenticated(true)
+        return response.data;
+      }).catch((error) => {
+        return error;
+
+      })
   };
 
-  const logout = () => {
+  const logout = async () => {
     setIsAuthenticated(false);
+    await AsyncStorage.setItem('token', '');
   };
 
   return (
