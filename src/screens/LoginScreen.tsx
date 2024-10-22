@@ -1,33 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  View, 
-  TextInput, 
-  Text, 
-  StyleSheet, 
-  TouchableOpacity, 
-  KeyboardAvoidingView, 
-  Platform 
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ActivityIndicator
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
+import { AxiosResponse } from 'axios';
 
 export const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, isAuthenticated } = useAuth();
+  const [loginStatus, setLoginStatus] = useState<number>();
+  const [loading, setLoading] = useState(false);
+  const { login, isAuthenticated, setIsAuthenticated } = useAuth();
 
   const handleLogin = async () => {
-    await login({email: email, password: password});
+    setLoading(true);
+    try {
+      const response: any = await login({ email, password });
+      
+      if (response && response.status === 200) {
+        setLoginStatus(response.status);
+        setTimeout(() => {
+          setLoading(false);
+          setIsAuthenticated(true);
+        }, 2000);
+      } else if (response && response.status === 401) {
+        setLoginStatus(401);
+      } else {
+        setLoginStatus(response.status || 500);
+      }
+    } catch (error) {
+      setLoginStatus(500); 
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => {
-    if(isAuthenticated) {
-      navigation.navigate('home')
-    }
-  }, [])
-
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
+    <KeyboardAvoidingView
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={styles.inner}>
@@ -49,10 +66,21 @@ export const LoginScreen = ({ navigation }: any) => {
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Entrar</Text>
+        <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loginStatus === 200}>
+          {!loading ?
+            <Text style={styles.buttonText}>Entrar</Text>
+            :
+            <ActivityIndicator size="small" color="#fff" />
+          }
         </TouchableOpacity>
-        {isAuthenticated && <Text style={styles.success}>Autenticado com sucesso!</Text>}
+        {(loginStatus === 200)
+        ?
+         <Text style={styles.success}>Autenticado com sucesso!</Text>
+        : (loginStatus === 401) 
+        ?
+         <Text style={{marginTop: 20, color: 'red', textAlign: 'center'}}>Credenciais inválidas!</Text>
+         : ''
+        }
       </View>
     </KeyboardAvoidingView>
   );

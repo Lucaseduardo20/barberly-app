@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthContextData {
   isAuthenticated: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void,
   login: (data: loginData) => Promise<void>;
   logout: () => void;
 }
@@ -13,16 +14,17 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const login = async (data: loginData) => {
-      await loginService(data).then((response) => {
-        setIsAuthenticated(true)
-        AsyncStorage.setItem('token', response.data.token);
-        return response.data;
-      }).catch((error) => {
-        return error;
-      })
+    try {
+      const response = await loginService(data);
+      await AsyncStorage.setItem('token', response.data.token);
+      return response;
+    } catch (error: any) {
+      console.log(error);
+      return error.response;
+    }
   };
 
   const logout = async () => {
@@ -31,7 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
