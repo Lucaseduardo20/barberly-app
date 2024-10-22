@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   View, 
   TextInput, 
@@ -17,10 +17,13 @@ export const LoginScreen = ({ navigation }: any) => {
 
   const handleLogin = async () => {
     await login({email: email, password: password});
-    if (isAuthenticated) {
-      navigation.navigate('Agendamentos');
-    }
   };
+
+  useEffect(() => {
+    if(isAuthenticated) {
+      navigation.navigate('home')
+    }
+  }, [isAuthenticated])
 
   return (
     <KeyboardAvoidingView 

@@ -17,12 +17,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (data: loginData) => {
       const response: AxiosResponse = await loginService(data).then(() => {
-        AsyncStorage.setItem('token', response.data.token);
-        setIsAuthenticated(true)
         return response.data;
       }).catch((error) => {
         return error;
-
+      }).finally(() => {
+        AsyncStorage.setItem('token', response.data.token);
+        setIsAuthenticated(true)
       })
   };
 
