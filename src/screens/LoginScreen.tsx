@@ -23,7 +23,7 @@ export const LoginScreen = ({ navigation }: any) => {
     if(isAuthenticated) {
       navigation.navigate('home')
     }
-  }, [isAuthenticated])
+  }, [])
 
   return (
     <KeyboardAvoidingView 
