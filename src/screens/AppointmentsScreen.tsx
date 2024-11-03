@@ -1,5 +1,9 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl  } from 'react-native';
+import { useAppointments } from '../contexts/AppointmentContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { format } from 'date-fns';
+import { AppointmentStatus } from '../types/appointment';
 
 const mockAgendamentos = [
   { 
@@ -29,6 +33,12 @@ const mockAgendamentos = [
 ];
 
 export const AppointmentsScreen = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState() as any;
+  const [refreshing, setRefreshing] = useState(false);
+  const {appointments} = useAppointments()
+
+  const { getAppointmentsApi } = useAppointments();
   const handleCancelar = (id: string) => {
     console.log(`Cancelando agendamento com id: ${id}`);
   };
@@ -41,26 +51,53 @@ export const AppointmentsScreen = () => {
     console.log(`Ver detalhes do agendamento com id: ${id}`);
   };
 
+  const formatDateTime = (date: string, time: string) => {
+    const appointmentDate = new Date(`${date}T${time}`);
+    return format(appointmentDate, "dd/MM/yyyy 'às' HH:mm");
+  };
+
+  const fetchAppointments = async () => {
+    const token: string = await AsyncStorage.getItem('token') as string;
+    try {
+      await getAppointmentsApi(token);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAppointments();
+  }, [])
+
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchAppointments();
+  };
+  
   return (
-    <View style={styles.container}>
+<View style={styles.container}>
       <Text style={styles.title}>Agendamentos</Text>
       <FlatList
-        data={mockAgendamentos}
-        keyExtractor={(item) => item.id}
+        data={appointments as any}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <View style={styles.infoContainer}>
-              <Text style={styles.cliente}>{item.cliente}</Text>
-              <Text style={styles.horario}>{item.horario}</Text>
-              <Text style={styles.servicos}>Serviços: {item.servicos.join(', ')}</Text>
-              <Text style={styles.valor}>Valor: {item.valor}</Text>
+              <Text style={styles.cliente}>{item.customer.name}</Text>
+              <Text style={styles.horario}>{formatDateTime(item.appointment_date, item.appointment_time)}</Text>
+              <Text style={styles.servicos}>Serviço: {item.service.name}</Text>
+              <Text style={styles.valor}>Valor: R$ {item.service.price}</Text>
               <Text style={[styles.status, item.status === 'concluído' ? styles.concluido : styles.pendente]}>
-                Status: {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                Status: {AppointmentStatus[item.status as keyof typeof AppointmentStatus]}
               </Text>
             </View>
-            
+
             <View style={styles.buttonsContainer}>
-              {item.status === 'pendente' && (
+              {item.status === 'pending' && (
                 <>
                   <TouchableOpacity 
                     style={[styles.button, styles.concluirButton]} 
@@ -87,6 +124,9 @@ export const AppointmentsScreen = () => {
             </View>
           </View>
         )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );

@@ -7,6 +7,7 @@ import { LoginScreen } from './src/screens/LoginScreen';
 import { AppointmentsScreen } from './src/screens/AppointmentsScreen';
 import { AccountScreen } from './src/screens/AccountScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
+import { AppointmentProvider } from './src/contexts/AppointmentContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -48,9 +49,11 @@ const AppNavigator = () => {
 export default function App() {
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
+      <AppointmentProvider>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </AppointmentProvider>
     </AuthProvider>
   );
 }
